@@ -36,12 +36,17 @@ class FetchCoins extends Command
             $data = $response->json();
 
             $count = count($data);
+            $percent = 0;
             echo "Coin list insertation started\n";
             foreach ($data as $key=>$coin) {
-                $percent = $key*100/$count;
-
-                echo "Processing: ". number_format((float)$percent, 2, '.', ' ')."%\n";
                 $this->createCoin($coin);//create coins list in database
+
+                // Log process % in console
+                $newPercent = floor($key*100/$count);
+                if ($newPercent>$percent) {
+                    $percent = $newPercent;
+                    echo "Processing: ". $percent."%\n";
+                }
             }
             echo "Coin list insertation Ended\n";
 
